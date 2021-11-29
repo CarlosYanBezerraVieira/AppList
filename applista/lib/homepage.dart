@@ -14,23 +14,27 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List _listaTarefas = [];
-  TextEditingController _controllerTarefa = TextEditingController();
+  TextEditingController _controllerText = TextEditingController();
+  TextEditingController _controllerConteudo = TextEditingController();
   Future<File> _getFile() async {
     final diretorio = await getApplicationDocumentsDirectory();
     return File("${diretorio.path}/dados.json");
   }
 
   _salvarTarefa() {
-    String textoDigitado = _controllerTarefa.text;
+    String textoDigitado = _controllerText.text;
+    String descricao = _controllerConteudo.text;
     //criar dados
     Map<String, dynamic> tarefa = Map();
     tarefa["titulo"] = textoDigitado;
     tarefa["realizada"] = false;
+    tarefa["conteudo"] = descricao;
+    //criar novo campo descrição aqui
     setState(() {
       _listaTarefas.add(tarefa);
     });
     _salvarArquivo();
-    _controllerTarefa.text = "";
+    _controllerText.text = "";
   }
 
   _salvarArquivo() async {
@@ -75,17 +79,33 @@ class _HomePageState extends State<HomePage> {
         children: [
           Expanded(
               child: ListView.builder(
+            // physics: BouncingScrollPhysics(),
             itemCount: _listaTarefas.length,
             itemBuilder: (context, index) {
-              return CheckboxListTile(
-                  title: Text(_listaTarefas[index]["titulo"]),
-                  value: _listaTarefas[index]["realizada"],
-                  onChanged: (valorAlterado) {
-                    setState(() {
-                      _listaTarefas[index]["realizada"] = valorAlterado;
-                      _salvarArquivo();
-                    });
-                  });
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(_listaTarefas[index]["titulo"]),
+                          Checkbox(
+                              value: _listaTarefas[index]["realizada"],
+                              onChanged: (valorAlterado) {
+                                setState(() {
+                                  _listaTarefas[index]["realizada"] =
+                                      valorAlterado;
+                                  _salvarArquivo();
+                                });
+                              }),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
               //  return ListTile(
               //
               //  );
@@ -102,10 +122,26 @@ class _HomePageState extends State<HomePage> {
               builder: (context) {
                 return AlertDialog(
                   title: Text("Criar tarefa"),
-                  content: TextField(
-                    controller: _controllerTarefa,
-                    decoration: InputDecoration(labelText: "Digite sua tarefa"),
-                    onChanged: (text) {},
+                  content: Container(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextField(
+                          controller: _controllerText,
+                          decoration: InputDecoration(labelText: "Titulo"),
+                          onChanged: (text) {},
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 20),
+                          child: TextField(
+                            controller: _controllerConteudo,
+                            decoration:
+                                InputDecoration(labelText: "Descrição "),
+                            onChanged: (text) {},
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   actions: [
                     TextButton(
@@ -127,3 +163,13 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+/*CheckboxListTile(
+                  title: Text(_listaTarefas[index]["titulo"]),
+                  value: _listaTarefas[index]["realizada"],
+                  subtitle: Text("aaa"),
+                  onChanged: (valorAlterado) {
+                    setState(() {
+                      _listaTarefas[index]["realizada"] = valorAlterado;
+                      _salvarArquivo();
+                    });
+                  });*/
