@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';
@@ -36,6 +35,7 @@ class _HomePageState extends State<HomePage> {
     });
     _salvarArquivo();
     _controllerText.text = "";
+    _controllerConteudo.text = "";
   }
 
   _salvarArquivo() async {
@@ -93,13 +93,13 @@ class _HomePageState extends State<HomePage> {
           Scaffold.of(context).showSnackBar(snackbar);
         },
         background: Container(
-          color: Colors.green,
+          color: Colors.red,
           padding: EdgeInsets.all(16),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Icon(
-                Icons.edit,
+                Icons.delete,
                 color: Colors.white,
               )
             ],
@@ -120,27 +120,161 @@ class _HomePageState extends State<HomePage> {
         ),
         direction: DismissDirection.horizontal,
         key: Key(DateTime.now().microsecondsSinceEpoch.toString()),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(_listaTarefas[index]["titulo"]),
-                    Checkbox(
-                        value: _listaTarefas[index]["realizada"],
-                        onChanged: (valorAlterado) {
-                          setState(() {
-                            _listaTarefas[index]["realizada"] = valorAlterado;
-                            _salvarArquivo();
-                          });
-                        }),
-                  ],
+        child: Container(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  padding: EdgeInsets.only(right: 5, left: 5, bottom: 5),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black),
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              _controllerText.text =
+                                  _listaTarefas[index]["titulo"];
+                              _controllerConteudo.text =
+                                  _listaTarefas[index]["conteudo"];
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Text(
+                                        "Criar tarefa",
+                                        style: TextStyle(color: Colors.indigo),
+                                      ),
+                                      content: Container(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            TextFormField(
+                                              controller: _controllerText,
+                                              decoration: InputDecoration(
+                                                hintText: "Título",
+                                                hintStyle: TextStyle(
+                                                    color: Colors.indigo[300],
+                                                    fontSize: 20),
+                                                focusedBorder:
+                                                    UnderlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            color:
+                                                                Colors.indigo)),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.only(top: 20),
+                                              child: Container(
+                                                child: TextFormField(
+                                                  controller:
+                                                      _controllerConteudo,
+                                                  decoration: InputDecoration(
+                                                    hintText: "Descrição",
+                                                    hintStyle: TextStyle(
+                                                        color:
+                                                            Colors.indigo[300],
+                                                        fontSize: 15),
+                                                    focusedBorder:
+                                                        UnderlineInputBorder(
+                                                            borderSide: BorderSide(
+                                                                color: Colors
+                                                                    .indigo)),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      actions: [
+                                        ElevatedButton(
+                                          style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all<
+                                                      Color>(Colors.indigo),
+                                              shape: MaterialStateProperty.all<
+                                                      RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(18.0),
+                                              ))),
+                                          child: Text(
+                                            "Cancelar",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                            _controllerText.text = "";
+                                            _controllerConteudo.text = "";
+                                          },
+                                        ),
+                                        ElevatedButton(
+                                          style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all<
+                                                      Color>(Colors.white),
+                                              shape: MaterialStateProperty.all<
+                                                      RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              18.0),
+                                                      side: BorderSide(
+                                                          color:
+                                                              Colors.indigo)))),
+                                          child: Text(
+                                            "Salvar",
+                                            style: TextStyle(
+                                                color: Colors.indigo,
+                                                fontSize: 20),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                            setState(() {
+                                              _listaTarefas[index]["titulo"] =
+                                                  _controllerText.text;
+                                              _listaTarefas[index]["conteudo"] =
+                                                  _controllerConteudo.text;
+                                              _salvarArquivo();
+                                              _controllerText.text = "";
+                                              _controllerConteudo.text = "";
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  });
+                            },
+                            child: Text(
+                              _listaTarefas[index]["titulo"],
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                          Checkbox(
+                              value: _listaTarefas[index]["realizada"],
+                              onChanged: (valorAlterado) {
+                                setState(() {
+                                  _listaTarefas[index]["realizada"] =
+                                      valorAlterado;
+                                  _salvarArquivo();
+                                });
+                              }),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ));
   }
@@ -158,59 +292,103 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Column(
         children: [
+          SizedBox(
+            height: 30,
+          ),
           Expanded(
               child: ListView.builder(
-                  // physics: BouncingScrollPhysics(),
+                  physics: BouncingScrollPhysics(),
                   itemCount: _listaTarefas.length,
                   itemBuilder: criarItemLista))
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        backgroundColor: Colors.indigo,
-        onPressed: () {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: Text("Criar tarefa"),
-                  content: Container(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextField(
-                          controller: _controllerText,
-                          decoration: InputDecoration(labelText: "Titulo"),
-                          onChanged: (text) {},
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 20),
-                          child: TextField(
-                            controller: _controllerConteudo,
-                            decoration:
-                                InputDecoration(labelText: "Descrição "),
-                            onChanged: (text) {},
-                          ),
-                        ),
-                      ],
+          child: Icon(Icons.add),
+          backgroundColor: Colors.indigo,
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text(
+                      "Criar tarefa",
+                      style: TextStyle(color: Colors.indigo),
                     ),
-                  ),
-                  actions: [
-                    TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: Text("Cancelar")),
-                    TextButton(
+                    content: Container(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextFormField(
+                            controller: _controllerText,
+                            decoration: InputDecoration(
+                              hintText: "Título",
+                              hintStyle: TextStyle(
+                                  color: Colors.indigo[300], fontSize: 20),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.indigo)),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 20),
+                            child: Container(
+                              child: TextFormField(
+                                controller: _controllerConteudo,
+                                decoration: InputDecoration(
+                                  hintText: "Descrição",
+                                  hintStyle: TextStyle(
+                                      color: Colors.indigo[300], fontSize: 15),
+                                  focusedBorder: UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.indigo)),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    actions: [
+                      ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(Colors.indigo),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            ))),
+                        child: Text(
+                          "Cancelar",
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(Colors.white),
+                            shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                    side: BorderSide(color: Colors.indigo)))),
+                        child: Text(
+                          "Salvar",
+                          style: TextStyle(color: Colors.indigo, fontSize: 20),
+                        ),
                         onPressed: () {
                           Navigator.pop(context);
                           _salvarTarefa();
-                          //salvar
                         },
-                        child: Text("Salvar"))
-                  ],
-                );
-              });
-        },
-      ),
+                      ),
+                    ],
+                  );
+                });
+
+            // Navigator.push(
+            //   context, MaterialPageRoute(builder: (context) => Tarefa()));
+          }),
       //bottomNavigationBar: BottomAppBar(),
     );
   }
