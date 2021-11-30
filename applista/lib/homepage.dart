@@ -14,6 +14,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List _listaTarefas = [];
+  Map<String, dynamic> _ultimoTarefaRemovida = Map();
   TextEditingController _controllerText = TextEditingController();
   TextEditingController _controllerConteudo = TextEditingController();
   Future<File> _getFile() async {
@@ -64,6 +65,86 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Widget criarItemLista(context, index) {
+    return Dismissible(
+        onDismissed: (direction) {
+          //recuperar ultimo item excluido
+          _ultimoTarefaRemovida = _listaTarefas[index];
+
+          //remover tarefa
+          setState(() {
+            _listaTarefas.removeAt(index);
+            _salvarArquivo();
+          });
+
+          final snackbar = SnackBar(
+              action: SnackBarAction(
+                  label: "Desfazer",
+                  onPressed: () {
+                    //inserindo novamente o item
+                    setState(() {
+                      _listaTarefas.insert(index, _ultimoTarefaRemovida);
+                      _salvarArquivo();
+                    });
+                  }),
+
+              //  backgroundColor: Colors.grey,
+              content: Text("Tarefa removida"));
+          Scaffold.of(context).showSnackBar(snackbar);
+        },
+        background: Container(
+          color: Colors.green,
+          padding: EdgeInsets.all(16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Icon(
+                Icons.edit,
+                color: Colors.white,
+              )
+            ],
+          ),
+        ),
+        secondaryBackground: Container(
+          color: Colors.red,
+          padding: EdgeInsets.all(16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Icon(
+                Icons.delete,
+                color: Colors.white,
+              )
+            ],
+          ),
+        ),
+        direction: DismissDirection.horizontal,
+        key: Key(DateTime.now().microsecondsSinceEpoch.toString()),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(_listaTarefas[index]["titulo"]),
+                    Checkbox(
+                        value: _listaTarefas[index]["realizada"],
+                        onChanged: (valorAlterado) {
+                          setState(() {
+                            _listaTarefas[index]["realizada"] = valorAlterado;
+                            _salvarArquivo();
+                          });
+                        }),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     // var width = MediaQuery.of(context).size.width;
@@ -79,38 +160,9 @@ class _HomePageState extends State<HomePage> {
         children: [
           Expanded(
               child: ListView.builder(
-            // physics: BouncingScrollPhysics(),
-            itemCount: _listaTarefas.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(_listaTarefas[index]["titulo"]),
-                          Checkbox(
-                              value: _listaTarefas[index]["realizada"],
-                              onChanged: (valorAlterado) {
-                                setState(() {
-                                  _listaTarefas[index]["realizada"] =
-                                      valorAlterado;
-                                  _salvarArquivo();
-                                });
-                              }),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              );
-              //  return ListTile(
-              //
-              //  );
-            },
-          ))
+                  // physics: BouncingScrollPhysics(),
+                  itemCount: _listaTarefas.length,
+                  itemBuilder: criarItemLista))
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -163,13 +215,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-/*CheckboxListTile(
-                  title: Text(_listaTarefas[index]["titulo"]),
-                  value: _listaTarefas[index]["realizada"],
-                  subtitle: Text("aaa"),
-                  onChanged: (valorAlterado) {
-                    setState(() {
-                      _listaTarefas[index]["realizada"] = valorAlterado;
-                      _salvarArquivo();
-                    });
-                  });*/
