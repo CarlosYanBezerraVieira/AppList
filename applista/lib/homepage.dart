@@ -146,31 +146,40 @@ class _HomePageState extends State<HomePage> {
                                   builder: (context) {
                                     return AlertDialog(
                                       title: Text(
-                                        "Criar tarefa",
+                                        "Editar Tarefa",
                                         style: TextStyle(color: Colors.indigo),
                                       ),
                                       content: Container(
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            TextFormField(
-                                              controller: _controllerText,
-                                              decoration: InputDecoration(
-                                                hintText: "Título",
-                                                hintStyle: TextStyle(
-                                                    color: Colors.indigo[300],
-                                                    fontSize: 20),
-                                                focusedBorder:
-                                                    UnderlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            color:
-                                                                Colors.indigo)),
+                                            ConstrainedBox(
+                                              constraints: BoxConstraints(
+                                                  maxHeight: 150),
+                                              child: TextFormField(
+                                                maxLines: null,
+                                                controller: _controllerText,
+                                                decoration: InputDecoration(
+                                                  hintText: "Título",
+                                                  hintStyle: TextStyle(
+                                                      color: Colors.indigo[300],
+                                                      fontSize: 20),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                          borderSide:
+                                                              BorderSide(
+                                                                  color: Colors
+                                                                      .indigo)),
+                                                ),
                                               ),
                                             ),
                                             Padding(
                                               padding: EdgeInsets.only(top: 20),
-                                              child: Container(
+                                              child: ConstrainedBox(
+                                                constraints: BoxConstraints(
+                                                    maxHeight: 150),
                                                 child: TextFormField(
+                                                  maxLines: null,
                                                   controller:
                                                       _controllerConteudo,
                                                   decoration: InputDecoration(
@@ -318,20 +327,27 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          TextFormField(
-                            controller: _controllerText,
-                            decoration: InputDecoration(
-                              hintText: "Título",
-                              hintStyle: TextStyle(
-                                  color: Colors.indigo[300], fontSize: 20),
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.indigo)),
+                          ConstrainedBox(
+                            constraints: BoxConstraints(maxHeight: 100),
+                            child: TextFormField(
+                              maxLines: null,
+                              controller: _controllerText,
+                              decoration: InputDecoration(
+                                hintText: "Título",
+                                hintStyle: TextStyle(
+                                    color: Colors.indigo[300], fontSize: 20),
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.indigo)),
+                              ),
                             ),
                           ),
                           Padding(
                             padding: EdgeInsets.only(top: 20),
-                            child: Container(
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(maxHeight: 100),
                               child: TextFormField(
+                                maxLines: null,
                                 controller: _controllerConteudo,
                                 decoration: InputDecoration(
                                   hintText: "Descrição",
@@ -362,6 +378,8 @@ class _HomePageState extends State<HomePage> {
                         ),
                         onPressed: () {
                           Navigator.pop(context);
+                          _controllerConteudo.text = "";
+                          _controllerText.text = "";
                         },
                       ),
                       ElevatedButton(
