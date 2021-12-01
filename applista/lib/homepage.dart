@@ -122,169 +122,171 @@ class _HomePageState extends State<HomePage> {
         direction: DismissDirection.horizontal,
         key: Key(DateTime.now().microsecondsSinceEpoch.toString()),
         child: Container(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  padding: EdgeInsets.only(right: 5, left: 5, bottom: 5),
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black),
-                      borderRadius: BorderRadius.circular(5)),
-                  child: Column(
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Container(
+              padding: EdgeInsets.only(right: 5, left: 15, bottom: 5),
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black),
+                  borderRadius: BorderRadius.circular(5)),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              _controllerText.text =
-                                  _listaTarefas[index]["titulo"];
-                              _controllerConteudo.text =
-                                  _listaTarefas[index]["conteudo"];
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      title: Text(
-                                        "Editar Tarefa",
-                                        style: TextStyle(color: Colors.indigo),
-                                      ),
-                                      content: Container(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            ConstrainedBox(
-                                              constraints: BoxConstraints(
-                                                  maxHeight: 150),
-                                              child: TextFormField(
-                                                maxLines: null,
-                                                controller: _controllerText,
-                                                decoration: InputDecoration(
-                                                  hintText: "Título",
-                                                  hintStyle: TextStyle(
-                                                      color: Colors.indigo[300],
-                                                      fontSize: 20),
-                                                  focusedBorder:
-                                                      UnderlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                  color: Colors
-                                                                      .indigo)),
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.only(top: 20),
-                                              child: ConstrainedBox(
-                                                constraints: BoxConstraints(
-                                                    maxHeight: 150),
-                                                child: TextFormField(
-                                                  maxLines: null,
-                                                  controller:
-                                                      _controllerConteudo,
-                                                  decoration: InputDecoration(
-                                                    hintText: "Descrição",
-                                                    hintStyle: TextStyle(
-                                                        color:
-                                                            Colors.indigo[300],
-                                                        fontSize: 15),
-                                                    focusedBorder:
-                                                        UnderlineInputBorder(
-                                                            borderSide: BorderSide(
-                                                                color: Colors
-                                                                    .indigo)),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      actions: [
-                                        ElevatedButton(
-                                          style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all<
-                                                      Color>(Colors.indigo),
-                                              shape: MaterialStateProperty.all<
-                                                      RoundedRectangleBorder>(
-                                                  RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(18.0),
-                                              ))),
-                                          child: Text(
-                                            "Cancelar",
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 20),
-                                          ),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                            _controllerText.text = "";
-                                            _controllerConteudo.text = "";
-                                          },
-                                        ),
-                                        ElevatedButton(
-                                          style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all<
-                                                      Color>(Colors.white),
-                                              shape: MaterialStateProperty.all<
-                                                      RoundedRectangleBorder>(
-                                                  RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              18.0),
-                                                      side: BorderSide(
+                      GestureDetector(
+                        onTap: () {
+                          _controllerText.text = _listaTarefas[index]["titulo"];
+                          _controllerConteudo.text =
+                              _listaTarefas[index]["conteudo"];
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text(
+                                    "Editar Tarefa",
+                                    style: TextStyle(color: Colors.indigo),
+                                  ),
+                                  content: Container(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        ConstrainedBox(
+                                          constraints:
+                                              BoxConstraints(maxHeight: 150),
+                                          child: TextFormField(
+                                            maxLines: null,
+                                            controller: _controllerText,
+                                            decoration: InputDecoration(
+                                              hintText: "Título",
+                                              hintStyle: TextStyle(
+                                                  color: Colors.indigo[300],
+                                                  fontSize: 20),
+                                              focusedBorder:
+                                                  UnderlineInputBorder(
+                                                      borderSide: BorderSide(
                                                           color:
-                                                              Colors.indigo)))),
-                                          child: Text(
-                                            "Salvar",
-                                            style: TextStyle(
-                                                color: Colors.indigo,
-                                                fontSize: 20),
+                                                              Colors.indigo)),
+                                            ),
                                           ),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                            setState(() {
-                                              _listaTarefas[index]["titulo"] =
-                                                  _controllerText.text;
-                                              _listaTarefas[index]["conteudo"] =
-                                                  _controllerConteudo.text;
-                                              _salvarArquivo();
-                                              _controllerText.text = "";
-                                              _controllerConteudo.text = "";
-                                            });
-                                          },
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(top: 20),
+                                          child: ConstrainedBox(
+                                            constraints:
+                                                BoxConstraints(maxHeight: 150),
+                                            child: TextFormField(
+                                              maxLines: null,
+                                              controller: _controllerConteudo,
+                                              decoration: InputDecoration(
+                                                hintText: "Descrição",
+                                                hintStyle: TextStyle(
+                                                    color: Colors.indigo[300],
+                                                    fontSize: 15),
+                                                focusedBorder:
+                                                    UnderlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            color:
+                                                                Colors.indigo)),
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ],
-                                    );
-                                  });
-                            },
-                            child: Text(
-                              _listaTarefas[index]["titulo"],
-                              style: TextStyle(
-                                fontSize: 20,
-                              ),
-                            ),
+                                    ),
+                                  ),
+                                  actions: [
+                                    ElevatedButton(
+                                      style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                                  Colors.indigo),
+                                          shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(18.0),
+                                          ))),
+                                      child: Text(
+                                        "Cancelar",
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 20),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        _controllerText.text = "";
+                                        _controllerConteudo.text = "";
+                                      },
+                                    ),
+                                    ElevatedButton(
+                                      style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                                  Colors.white),
+                                          shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          18.0),
+                                                  side: BorderSide(
+                                                      color: Colors.indigo)))),
+                                      child: Text(
+                                        "Salvar",
+                                        style: TextStyle(
+                                            color: Colors.indigo, fontSize: 20),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        setState(() {
+                                          _listaTarefas[index]["titulo"] =
+                                              _controllerText.text;
+                                          _listaTarefas[index]["conteudo"] =
+                                              _controllerConteudo.text;
+                                          _salvarArquivo();
+                                          _controllerText.text = "";
+                                          _controllerConteudo.text = "";
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                );
+                              });
+                        },
+                        child: Text(
+                          _listaTarefas[index]["titulo"],
+                          style: TextStyle(
+                            fontSize: 18,
                           ),
-                          Checkbox(
-                              value: _listaTarefas[index]["realizada"],
-                              onChanged: (valorAlterado) {
-                                setState(() {
-                                  _listaTarefas[index]["realizada"] =
-                                      valorAlterado;
-                                  _salvarArquivo();
-                                });
-                              }),
-                        ],
+                        ),
                       ),
+                      Checkbox(
+                          value: _listaTarefas[index]["realizada"],
+                          onChanged: (valorAlterado) {
+                            setState(() {
+                              _listaTarefas[index]["realizada"] = valorAlterado;
+                              _salvarArquivo();
+                            });
+                          }),
                     ],
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          _listaTarefas[index]["conteudo"],
+                          style: TextStyle(
+                            fontSize: 15,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ));
   }
@@ -303,7 +305,7 @@ class _HomePageState extends State<HomePage> {
         body: Column(
           children: [
             SizedBox(
-              height: 30,
+              height: 10,
             ),
             Expanded(
                 child: ListView.builder(
