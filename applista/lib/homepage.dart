@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:applista/floatingButtom.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';
@@ -294,120 +295,29 @@ class _HomePageState extends State<HomePage> {
     //var height = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text("Lista De Tarefas"),
-        backgroundColor: Colors.indigo,
-      ),
-      body: Column(
-        children: [
-          SizedBox(
-            height: 30,
-          ),
-          Expanded(
-              child: ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  itemCount: _listaTarefas.length,
-                  itemBuilder: criarItemLista))
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text("Lista De Tarefas"),
           backgroundColor: Colors.indigo,
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Text(
-                      "Criar tarefa",
-                      style: TextStyle(color: Colors.indigo),
-                    ),
-                    content: Container(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          ConstrainedBox(
-                            constraints: BoxConstraints(maxHeight: 100),
-                            child: TextFormField(
-                              maxLines: null,
-                              controller: _controllerText,
-                              decoration: InputDecoration(
-                                hintText: "Título",
-                                hintStyle: TextStyle(
-                                    color: Colors.indigo[300], fontSize: 20),
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.indigo)),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 20),
-                            child: ConstrainedBox(
-                              constraints: BoxConstraints(maxHeight: 100),
-                              child: TextFormField(
-                                maxLines: null,
-                                controller: _controllerConteudo,
-                                decoration: InputDecoration(
-                                  hintText: "Descrição",
-                                  hintStyle: TextStyle(
-                                      color: Colors.indigo[300], fontSize: 15),
-                                  focusedBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.indigo)),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    actions: [
-                      ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.indigo),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                            ))),
-                        child: Text(
-                          "Cancelar",
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          _controllerConteudo.text = "";
-                          _controllerText.text = "";
-                        },
-                      ),
-                      ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.white),
-                            shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
-                                    side: BorderSide(color: Colors.indigo)))),
-                        child: Text(
-                          "Salvar",
-                          style: TextStyle(color: Colors.indigo, fontSize: 20),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          _salvarTarefa();
-                        },
-                      ),
-                    ],
-                  );
-                });
-
-            // Navigator.push(
-            //   context, MaterialPageRoute(builder: (context) => Tarefa()));
-          }),
-      //bottomNavigationBar: BottomAppBar(),
-    );
+        ),
+        body: Column(
+          children: [
+            SizedBox(
+              height: 30,
+            ),
+            Expanded(
+                child: ListView.builder(
+                    physics: BouncingScrollPhysics(),
+                    itemCount: _listaTarefas.length,
+                    itemBuilder: criarItemLista))
+          ],
+        ),
+        floatingActionButton: FloatingButtom(
+          controllerConteudo: _controllerConteudo,
+          controllerText: _controllerText,
+          salvarTarefa: _salvarTarefa,
+        )
+        //bottomNavigationBar: BottomAppBar(),
+        );
   }
 }
